@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
-import subprocess
-import re
 import argparse
+import json
+import re
+import subprocess
+import time
 
 def queryname(asn, queryhost='whois.radb.net'):
 	command = ['whois', '-h', queryhost, 'as{}'.format(asn)]
@@ -24,19 +26,32 @@ def queryprefixes(asn, queryhost='whois.radb.net'):
 	
 	return(prefixes)
 
+def createas(name, prefixes):
+	return { 'name': name, 'prefixes': prefixes }
+
+def createjson(asns):
+	data = {}
+
+	data['timestamp'] = time.time()
+	data['asns'] = asns
+
+	return json.dumps(data)
+
 def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--asn", nargs='+', type=int, required=True)
 	parser.add_argument("--host", default="whois.radb.net")
 	args = parser.parse_args()
 
+	asns = {}
+
 	for asn in args.asn:
 		name = queryname(asn, args.host)
 		prefixes = queryprefixes(asn, args.host)
 
-		print("Name: ", name)
-		print("Prefixes: ", prefixes)
+		asns[asn] = createas(name, prefixes)
 
+	print createjson(asns)
 
 if __name__ == "__main__":
 	main()
