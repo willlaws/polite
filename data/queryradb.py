@@ -2,13 +2,20 @@
 
 import subprocess
 
-command = ['whois', '-h', 'whois.radb.net', '!gas2381']
+def queryradb(asn, queryhost='whois.radb.net'):
+	command = ['whois', '-h', queryhost, '!gas{}'.format(asn)]
 
-response = subprocess.check_output(command)
-prefixes = response.split("\n")[1].split(" ")
+	print command
+	
+	response = subprocess.check_output(command)
+	prefixes = response.split("\n")[1].split(" ")
+	
+	return(prefixes)
 
-print(prefixes)
+def main():
+	print(queryradb(2381,'whois.radb.net'))
 
 
-
+if __name__ == "__main__":
+	main()
 
