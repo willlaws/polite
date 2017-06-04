@@ -1,0 +1,77 @@
+<html>
+<body>
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="data/dataNow.js"></script>
+<script src="data/dataPast.js"></script>
+
+</head>
+<canvas style="width: 75%" id="myChart"></canvas>
+<canvas style="width: 75%" id="compare"></canvas>
+<script type="text/javascript">
+
+
+function drawBar(canvas, asns, data, timestamp, color, title) {
+var dateNow = new Date();
+dateNow.setTime(timestamp*1000);
+dateString = dateNow.toUTCString();
+
+  var ctx = document.getElementById(canvas).getContext('2d');
+  var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'bar',
+
+    // The data for our dataset
+    data: {
+        labels: asns,
+        datasets: [{
+            label: title + dateString,
+            backgroundColor: color,
+            borderColor: color,
+            data: data,
+        }]
+    },
+
+    // Configuration options go here
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true,
+                    max: Math.max.apply(Math, data) * 1.1,
+                    min: Math.min.apply(Math, data) * 1.1
+                }
+            }]
+        }
+    }
+});
+
+
+
+}
+
+var asns = Object.keys(data1.asns)
+$.each(asns, function (key, value) {
+    asns[key] = value + "[" + data1.asns[value].name + "]";
+});
+var numberOfPrefixes = []
+$.each(data1.asns, function(key, value) {
+    numberOfPrefixes.push(value.prefixes.length)
+});
+
+var changedPrefixes = []
+$.each(data1.asns, function(key, value) {
+    changedPrefixes.push(value.prefixes.length - dataPast.asns[key].prefixes.length)
+});
+
+var title1 = "Number of prefixes pulled from RIRs per ASN at ";
+var title2 = "Changes since ";
+
+
+drawBar('myChart', asns, numberOfPrefixes, data1.timestamp, 'rgb(50, 216, 126)', title1)
+drawBar('compare', asns, changedPrefixes, dataPast.timestamp, 'rgb(255, 99, 132)', title2)
+
+</script>
+</body>
+</html>
