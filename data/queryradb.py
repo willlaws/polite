@@ -23,13 +23,14 @@ def queryprefixes(asn, queryhost='whois.radb.net'):
 	
 	return(prefixes)
 
+def createas(name, prefixes):
+	return { 'name': name, 'prefixes': prefixes }
+
 def main():
 	name = queryname(2381)
 	prefixes = queryprefixes(2381,'whois.radb.net')
 
-	print("Name: ", name)
-	print("Prefixes: ", prefixes)
-
+	print createas(name, prefixes)
 
 if __name__ == "__main__":
 	main()
