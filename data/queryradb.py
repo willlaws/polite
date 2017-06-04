@@ -26,16 +26,16 @@ def queryprefixes(asn, queryhost='whois.radb.net'):
 
 def main():
 	parser = argparse.ArgumentParser()
-	parser.add_argument("--asn", type=int, required=True)
+	parser.add_argument("--asn", nargs='+', type=int, required=True)
 	parser.add_argument("--host", default="whois.radb.net")
 	args = parser.parse_args()
 
+	for asn in args.asn:
+		name = queryname(asn, args.host)
+		prefixes = queryprefixes(asn, args.host)
 
-	name = queryname(args.asn, args.host)
-	prefixes = queryprefixes(args.asn, args.host)
-
-	print("Name: ", name)
-	print("Prefixes: ", prefixes)
+		print("Name: ", name)
+		print("Prefixes: ", prefixes)
 
 
 if __name__ == "__main__":
