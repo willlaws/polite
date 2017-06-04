@@ -2,6 +2,7 @@
 
 import subprocess
 import re
+import argparse
 
 def queryname(asn, queryhost='whois.radb.net'):
 	command = ['whois', '-h', queryhost, 'as{}'.format(asn)]
@@ -24,11 +25,17 @@ def queryprefixes(asn, queryhost='whois.radb.net'):
 	return(prefixes)
 
 def main():
-	name = queryname(2381)
-	prefixes = queryprefixes(2381,'whois.radb.net')
+	parser = argparse.ArgumentParser()
+	parser.add_argument("--asn", nargs='+', type=int, required=True)
+	parser.add_argument("--host", default="whois.radb.net")
+	args = parser.parse_args()
 
-	print("Name: ", name)
-	print("Prefixes: ", prefixes)
+	for asn in args.asn:
+		name = queryname(asn, args.host)
+		prefixes = queryprefixes(asn, args.host)
+
+		print("Name: ", name)
+		print("Prefixes: ", prefixes)
 
 
 if __name__ == "__main__":
